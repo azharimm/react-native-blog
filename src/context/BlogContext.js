@@ -1,6 +1,7 @@
 import createDataContext from './createDataContext'
 import BlogPostForm from '../components/BlogPostForm'
 import jsonServer from '../api/jsonServer'
+import axios from 'axios'
 
 const blogReducer = (state, action) => {
     switch(action.type) {
@@ -26,14 +27,15 @@ const blogReducer = (state, action) => {
 const getBlogPosts = (dispatch) => {
     return async () => {
         const response = await jsonServer.get('/blogposts');
-
+        console.log(response.data)
         dispatch({type: 'get_blogposts', payload: response.data})
     }
 }
 
 const addBlogPost = (dispatch) => {
-    return (title, content, callback) => {
-        dispatch({type: 'add_blogpost', payload: {title, content}})
+    return async (title, content, callback) => {
+        await jsonServer.post(`/blogposts`, {title, content});
+        // dispatch({type: 'add_blogpost', payload: {title, content}})
         if(callback) {
             callback()
         }
