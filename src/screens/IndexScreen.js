@@ -5,9 +5,19 @@ import {Feather} from '@expo/vector-icons'
 
 const IndexScreen = ({navigation}) => {
     const {state, deleteBlogPost, getBlogPosts} = useContext(Context)
-    
+
     useEffect(() => {
+        //fetch when first load
         getBlogPosts()
+        //fetch when screen load again
+        const listener = navigation.addListener('didFocus', () => {
+            getBlogPosts()
+        })
+        //remove when screen remove
+        return () => {
+            listener.remove()
+        }
+
     }, [])
     
     return (
